@@ -1,63 +1,64 @@
 ﻿@page "/weather"
 
-<PageTitle>Weather</PageTitle>
+<PageTitle>Movimientos</PageTitle>
 
-<h1>Weather</h1>
+<h1>Movimientos</h1>
 
-<p>This component demonstrates showing data.</p>
+<br />
 
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>2021-01-01</td>
+            <td>Descripción</td>
+            <td>Intensidad</td>
+            <td>Intensidad</td>
+            <td>Nombre</td>
+            <td>
+                <button type="button" class="btn btn-primary">Editar</button>
+                <button type="button" class="btn btn-danger">Eliminar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
-@code {
-    private WeatherForecast[]? forecasts;
+<br />
 
-    protected override async Task OnInitializedAsync()
-    {
-        // Simulate asynchronous loading to demonstrate a loading indicator
-        await Task.Delay(500);
+<h3>Registrar Movimiento</h3>   
 
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = startDate.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray();
-    }
+<label>Usuario: </label>
+<select class="form-control">
+    <option value="1">Usuario 1</option>
+    <option value="2">Usuario 2</option>
+    <option value="3">Usuario 3</option>
+</select>
 
-    private class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
-        public int TemperatureC { get; set; }
-        public string? Summary { get; set; }
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
-}
+<br />
+<label>Cantidad: </label>
+<input type="number" placeholder="Escriba la cantidad" />
+<br />
+<label>Tipo: </label>
+<select class="form-control">
+    <option value="ingreso">Ingreso</option>
+    <option value="egreso">Egreso</option>
+</select>
+<br />
+<label>Descripción: </label>
+<input type="text" placeholder="Escriba la descripción" />
+
+<br />
+<button type="button" class="btn btn-primary">Guardar</button>
+
+<p>Procesando...</p>
