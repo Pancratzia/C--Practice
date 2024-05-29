@@ -21,7 +21,6 @@
 
     async Task ProbarConexion()
     {
-        await Task.Delay(3000);
         var respuesta = await Http.GetStringAsync("http://localhost:5137/api/User/Test");
         ConexionServidor = respuesta;
 

@@ -1,4 +1,6 @@
 ﻿@page "/users"
+@using DemoCRUD.Shared
+@inject HttpClient Http
 
 <PageTitle>Usuarios</PageTitle>
 
@@ -12,24 +14,73 @@
             <th>Nombre</th>
             <th>Correo</th>
         </tr>
+
     </thead>
     <tbody>
-       <tr>
-           <td>Primer usuario</td>
-           <td>Primer correo</td>
-       </tr>
+
+        @if (Listado.Count > 0)
+        {
+
+            @foreach (var item in Listado)
+            {
+                <tr>
+                    <td>@item.Nombre</td>
+                    <td>@item.Correo</td>
+                </tr>
+            }
+
+        }
+        else
+        {
+            <tr>
+                <td colspan="2">No hay datos</td>
+            </tr>
+        }
+
     </tbody>
 </table>
 
 <br />
 
+
 <label class="form-label">Nombre: </label>
-<input class="form-control" type="text" placeholder="Escriba su nombre" />
+<input class="form-control" type="text" placeholder="Escriba su nombre" @bind-value="usuario.Nombre" />
 <br />
 <label class="form-label">Correo: </label>
-<input class="form-control" type="email" placeholder="Escriba su correo" />
+<input class="form-control" type="email" placeholder="Escriba su correo" @bind-value="usuario.Correo" />
 
 <br />
-<button type="button" class="btn btn-primary">Guardar</button>
+<button @onclick="CrearUsuario" type="button" class="btn btn-primary">Guardar</button>
 
-<p class="alert alert-info mt-2">Procesando...</p>
+@if (!string.IsNullOrEmpty(Respuesta))
+{
+    <p class="alert alert-info mt-2" role="alert">@Respuesta</p>
+}
+
+@code {
+
+    string Respuesta = "";
+    User usuario = new User();
+    public static List<User> Listado = new List<User>();
+
+    async Task CrearUsuario()
+    {
+
+        if (string.IsNullOrEmpty(usuario.Nombre) || string.IsNullOrEmpty(usuario.Correo))
+        {
+            Respuesta = "Faltan datos";
+            return;
+        }
+        var respuesta = await Http.PostAsJsonAsync("http://localhost:5137/api/User/AddUser", usuario);
+
+        Respuesta = await respuesta.Content.ReadAsStringAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var usuarios = await Http.GetFromJsonAsync<List<User>>("http://localhost:5137/api/User/GetUsers");
+
+        Listado = usuarios ?? new List<User>();
+    }
+
+}
