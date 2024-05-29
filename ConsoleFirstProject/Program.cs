@@ -1,7 +1,13 @@
-﻿Console.WriteLine(Some((a, b) => a + b, 1));
-
-int Some (Func <int, int, int> fn, int number)
+﻿var names = new List<string>()
 {
-    var result = fn(number, number);
-    return result;
+    "Pancratzia", "Arhuro", "Tiffany", "Teresa"
+};
+
+var namesResult = from n in names
+                  orderby n descending
+                  select n;
+
+foreach (var name in namesResult)
+{
+    Console.WriteLine(name);
 }
