@@ -18,6 +18,7 @@ namespace DemoCRUD.Data
 
 
         public DbSet<User> Usuarios { get; set; }
+        public DbSet<Movement> Movimientos { get; set; }
     }
 
 }
