@@ -1,4 +1,5 @@
 ﻿using DemoCRUD.Data;
+using DemoCRUD.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,21 @@ namespace DemoCRUD.Controllers
             catch (Exception ex)
             {
                 return "Ha habido un error en la conexión";
+            }
+        }
+
+        [HttpPost("AddMovement")]
+        public async Task<ActionResult<string>> AddMovement(Movement movement)
+        {
+            try
+            {
+                _context.Movimientos.Add(movement);
+                await _context.SaveChangesAsync();
+                return "¡Movimiento agregado con exito!";
+            }
+            catch (Exception ex)
+            {
+                return "Ha habido un error en la aplicación";
             }
         }
     }

@@ -1,4 +1,6 @@
 ﻿@page "/movements"
+@using DemoCRUD.Shared
+@inject HttpClient Http
 
 <PageTitle>Movimientos</PageTitle>
 
@@ -36,29 +38,65 @@
 
 <br />
 
-<h3>Registrar Movimiento</h3>   
+<h3>Registrar Movimiento</h3>
 
 <label class="form-label">Usuario: </label>
-<select class="form-control">
-    <option value="1">Usuario 1</option>
-    <option value="2">Usuario 2</option>
-    <option value="3">Usuario 3</option>
-</select>
+<InputSelect class="form-control" @bind-Value="@movimiento.UsuarioId">
+    <option value="0">-- Seleccione --</option>
+    @foreach (var user in ListadoUsuarios)
+    {
+        <option value="@user.Id">@user.Nombre</option>
+    }
+</InputSelect>
 
 <br />
 <label class="form-label">Cantidad: </label>
-<input class="form-control" type="number" placeholder="Escriba la cantidad" />
+<input class="form-control" type="number" placeholder="Escriba la cantidad" @bind-value="movimiento.Cantidad" />
 <br />
 <label class="form-label">Tipo: </label>
-<select class="form-control">
+<select class="form-control" @bind="@movimiento.Tipo">
     <option value="ingreso">Ingreso</option>
     <option value="egreso">Egreso</option>
 </select>
 <br />
 <label class="form-label">Descripción: </label>
-<input class="form-control" type="text" placeholder="Escriba la descripción" />
+<input class="form-control" type="text" placeholder="Escriba la descripción" @bind-value="movimiento.Descripcion" />
 
 <br />
-<button type="button" class="btn btn-primary">Guardar</button>
+<button @onclick="AddMovement" type="button" class="btn btn-primary">Guardar</button>
 
-<p class="alert alert-info mt-2">Procesando...</p>
+@if (!string.IsNullOrEmpty(Respuesta))
+{
+    <p class="alert alert-info mt-2" role="alert">@Respuesta</p>
+}
+
+@code {
+    string Respuesta = "";
+    public static List<Movement> Listado = new List<Movement>();
+    public static List<User> ListadoUsuarios = new List<User>();
+    User miUsuario = new User();
+    Movement movimiento = new Movement();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await UpdateUsers();
+        await UpdateMovements();
+    }
+
+    async Task AddMovement()
+    {
+        var respuesta = await Http.PostAsJsonAsync("http://localhost:5137/api/Movement/AddMovement", movimiento);
+        Respuesta = await respuesta.Content.ReadAsStringAsync();
+        await UpdateMovements();
+    }
+
+    async Task UpdateUsers()
+    {
+        var usuarios = await Http.GetFromJsonAsync<List<User>>("http://localhost:5137/api/User/GetUsers");
+        ListadoUsuarios = usuarios ?? new List<User>();
+    }
+
+    async Task UpdateMovements()
+    {
+    }
+}
