@@ -1,91 +1,33 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Text.Json;
 
-var numbers = new MyList<int>(5);
-var names = new MyList<string>(4);
-var beers = new MyList<Beer>(3);
-
-numbers.Add(1);
-numbers.Add(2);
-numbers.Add(3);
-numbers.Add(4);
-numbers.Add(5);
-numbers.Add(6); // Will not be added
-
-Console.WriteLine(numbers.GetContet());
-
-names.Add("Pancratzia");
-names.Add("Teresa");
-names.Add("Arthuro");
-names.Add("Tiffany");
-names.Add("Cristian"); // Will not be added
-
-Console.WriteLine(names.GetContet());
-
-beers.Add(new Beer
+var pancratzia = new People()
 {
-    Name = "Corona",
-    Price = 9.99m
-});
+    Name = "Pancratzia",
+    Age = 23
+};
 
-beers.Add(new Beer
-{
-    Name = "Heineken",
-    Price = 8.99m
-});
-
-beers.Add(new Beer
-{
-    Name = "Stella Artois",
-    Price = 7.99m
-});
-
-beers.Add(new Beer
-{
-    Name = "Budweiser",
-    Price = 6.99m
-}); // Will not be added
-
-Console.WriteLine(beers.GetContet());
-
-public class MyList<T>
-{
-    private List<T> _list;
-    private int _limit;
-
-    public MyList(int limit)
-    {
-        _limit = limit;
-        _list = new List<T>();
-    }
+string json = JsonSerializer.Serialize(pancratzia);
+Console.WriteLine(json);
 
 
-    public void Add(T element)
-    {
-        if (_list.Count < _limit)
-        {
-            _list.Add(element);
-        }
-    }
+string myJSON = @"{
+""Name"":""Pancratzia"",
+""Age"":23
+}";
 
-    public string GetContet()
-    {
-        string content = "";
-        foreach (var item in _list)
-        {
-            content += item + " ";
-        }
-        return content;
-    }
-}
+var pancratzia2 = JsonSerializer.Deserialize<People>(myJSON);
+Console.WriteLine(pancratzia2?.Name);
+Console.WriteLine(pancratzia2?.Age);
 
-class Beer
+People? pancratzia3 = null;
+
+Console.WriteLine(pancratzia3?.Name);
+Console.WriteLine(pancratzia3?.Age);
+
+
+public class People
 {
     public string Name { get; set; }
+    public int Age { get; set; }
 
-    public decimal Price { get; set; }
-
-    public override string ToString()
-    {
-        return "Nombre: " + Name + " - Precio: " + Price;
-    }
 }
