@@ -1,5 +1,7 @@
 ﻿@page "/"
 
+@inject HttpClient Http
+
 <PageTitle>Home</PageTitle>
 
 <h1 class="text-center mb-5">FINANZAS PERSONALES</h1>
@@ -8,6 +10,22 @@
 
 <br />
 
-<p class="alert alert-info">Conectando con el Servidor...</p>
+<p class="alert alert-info">@ConexionServidor</p>
 <p class="alert alert-success">Conectando con la BD de la tabla de Usuarios</p>
 <p class="alert alert-success">Conectando con la BD de la tabla de Movimientos</p>
+
+@code{
+    string ConexionServidor = "En espera...";
+
+    async Task ProbarConexion()
+    {
+        await Task.Delay(3000);
+        var respuesta = await Http.GetStringAsync("http://localhost:5137/api/User/Test");
+        ConexionServidor = respuesta;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ProbarConexion();
+    }
+}
