@@ -1,49 +1,91 @@
-﻿var venta = new Venta();
-var prestamo = new Prestamo();
+﻿using System.Runtime.CompilerServices;
 
-Some(venta);
-Some(prestamo);
+var numbers = new MyList<int>(5);
+var names = new MyList<string>(4);
+var beers = new MyList<Beer>(3);
 
+numbers.Add(1);
+numbers.Add(2);
+numbers.Add(3);
+numbers.Add(4);
+numbers.Add(5);
+numbers.Add(6); // Will not be added
 
-void Some(ISave save)
+Console.WriteLine(numbers.GetContet());
+
+names.Add("Pancratzia");
+names.Add("Teresa");
+names.Add("Arthuro");
+names.Add("Tiffany");
+names.Add("Cristian"); // Will not be added
+
+Console.WriteLine(names.GetContet());
+
+beers.Add(new Beer
 {
-    save.Save();
-}
+    Name = "Corona",
+    Price = 9.99m
+});
 
-public interface IVenta
+beers.Add(new Beer
 {
-    public decimal Total { get; set; }
-    public string GetInfo();
-}
+    Name = "Heineken",
+    Price = 8.99m
+});
 
-public interface ISave
+beers.Add(new Beer
 {
-    public void Save();
-}
+    Name = "Stella Artois",
+    Price = 7.99m
+});
 
-
-public class Venta : IVenta, ISave
+beers.Add(new Beer
 {
-    public decimal Total { get; set; }
+    Name = "Budweiser",
+    Price = 6.99m
+}); // Will not be added
 
-    public Venta()
+Console.WriteLine(beers.GetContet());
+
+public class MyList<T>
+{
+    private List<T> _list;
+    private int _limit;
+
+    public MyList(int limit)
     {
-        Total = 100;
+        _limit = limit;
+        _list = new List<T>();
     }
-    public string GetInfo()
+
+
+    public void Add(T element)
     {
-        return "El total es: " + Total;
+        if (_list.Count < _limit)
+        {
+            _list.Add(element);
+        }
     }
-    public void Save()
+
+    public string GetContet()
     {
-        Console.WriteLine("Guardando venta");
+        string content = "";
+        foreach (var item in _list)
+        {
+            content += item + " ";
+        }
+        return content;
     }
 }
 
-public class Prestamo : ISave
+class Beer
 {
-    public void Save()
+    public string Name { get; set; }
+
+    public decimal Price { get; set; }
+
+    public override string ToString()
     {
-        Console.WriteLine("Guardando prestamo");
+        return "Nombre: " + Name + " - Precio: " + Price;
     }
 }
