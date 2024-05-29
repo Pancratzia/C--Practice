@@ -1,17 +1,16 @@
-﻿
-var show = Show;
-
-Some(show, "Hello World!");
-
-
-string Show(string message)
+﻿Func<int, int, int> sub = (a,b) => a - b;
+Func<int, int> doubleNum = x => x * 2;
+Func<int, int> tripleNum = x =>
 {
-    return message.ToUpper();
-}
+    int aux = 3;
+    return x * aux;
+};
 
-void Some(Func<string, string> fn, string message)
-{
-    Console.WriteLine("Hola!");
-    Console.WriteLine(fn(message));
-    Console.WriteLine("Adios!");
-}
+int result = sub(10, 5);
+Console.WriteLine(result);
+
+result = doubleNum(result);
+Console.WriteLine(result);
+
+result = tripleNum(result);
+Console.WriteLine(result);
