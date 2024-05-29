@@ -1,17 +1,21 @@
-﻿Console.WriteLine("La resta de 10 menos 5 da como resultado " + Sub(10, 5));
-
-
-int Sub(int a, int b) //Función Pura. Siempre devuelve un el mismo valor bajo las mismas condiciones en su llamada
+﻿var beer = new Beer()
 {
-    return a - b;
+    Name = "Corona"
+};
+
+
+Console.WriteLine(ToUpper(beer).Name);
+Console.WriteLine(beer.Name);
+
+
+
+Beer ToUpper (Beer beer) //No es pura pues modifica el objeto original
+{
+    beer.Name = beer.Name.ToUpper();
+    return beer;
 }
 
-DateTime GetTommorrow() //No es una función pura porque modifica el tiempo
+class Beer
 {
-    return DateTime.Now.AddDays(1);
-}
-
-DateTime GetTommorrowPure(DateTime date) //Función pura debido a que si se le pasa el mismo parametro todos los días, siempre dará el mismo valor
-{
-    return date.AddDays(1);
+    public string Name { get; set; }
 }
