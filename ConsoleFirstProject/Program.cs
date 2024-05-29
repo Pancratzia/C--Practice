@@ -9,10 +9,14 @@ Console.WriteLine(beer.Name);
 
 
 
-Beer ToUpper (Beer beer) //No es pura pues modifica el objeto original
+Beer ToUpper (Beer beer) //Es pura, ya que crea una nueva instancia y no modifica el valor original
 {
-    beer.Name = beer.Name.ToUpper();
-    return beer;
+    var newBeer = new Beer()
+    {
+        Name = beer.Name.ToUpper()
+    };
+
+    return newBeer;
 }
 
 class Beer
