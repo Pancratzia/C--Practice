@@ -1,66 +1,49 @@
-﻿var sale = new Sale(15);
+﻿var venta = new Venta();
+var prestamo = new Prestamo();
 
-var message = sale.GetInfo();
-Console.WriteLine(message);
-
-sale.Total = 20;
-message = sale.GetInfo();
-Console.WriteLine("Ahora el total ha cambiado!");
-Console.WriteLine(message);
+Some(venta);
+Some(prestamo);
 
 
-Console.WriteLine("Ahora creamos una venta con impuestos");
-var saleWithTax = new SaleWithTax(20, 15);
-message = saleWithTax.GetInfo();
-Console.WriteLine(message);
-
-message = saleWithTax.GetInfo("Hola, soy un método sobrecargado");
-Console.WriteLine(message);
-
-message = saleWithTax.GetInfo(20);
-Console.WriteLine(message);
-
-class Sale
+void Some(ISave save)
 {
-    //public se puede acceder desde cualquier lugar
-    //private solo se puede acceder desde dentro de la clase
-    //protected solo se puede acceder desde dentro de la clase o de las clases derivadas
+    save.Save();
+}
+
+public interface IVenta
+{
     public decimal Total { get; set; }
-    private decimal _some;
+    public string GetInfo();
+}
 
-    public Sale(decimal total)
+public interface ISave
+{
+    public void Save();
+}
+
+
+public class Venta : IVenta, ISave
+{
+    public decimal Total { get; set; }
+
+    public Venta()
     {
-        Total = total;
-        _some = 0;
+        Total = 100;
     }
-
-    public virtual string GetInfo()
+    public string GetInfo()
     {
         return "El total es: " + Total;
     }
-
-    public string GetInfo(string message)
+    public void Save()
     {
-        return message;
-    }
-
-    public string GetInfo(int total)
-    {
-        return "El total manual: " + total;
+        Console.WriteLine("Guardando venta");
     }
 }
 
-class SaleWithTax : Sale
+public class Prestamo : ISave
 {
-
-    public decimal Tax { get; }
-    public SaleWithTax(decimal total, decimal tax) : base(total)
+    public void Save()
     {
-        Tax = tax;
-    }
-
-    public override string GetInfo()
-    {
-        return base.GetInfo() + " y el impuesto es: " + Tax;
+        Console.WriteLine("Guardando prestamo");
     }
 }
