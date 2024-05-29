@@ -1,18 +1,17 @@
 ﻿
 var show = Show;
 
-show("Hello World!");
+Some(show, "Hello World!");
 
-Some(Show, "Some message");
-void Show(string message)
+
+string Show(string message)
 {
-    Console.WriteLine(message);
+    return message.ToUpper();
 }
 
-void Some(Action<string> fn, string message)
+void Some(Func<string, string> fn, string message)
 {
     Console.WriteLine("Hola!");
-    fn(message);
-
+    Console.WriteLine(fn(message));
     Console.WriteLine("Adios!");
 }
