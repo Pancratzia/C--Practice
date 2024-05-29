@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DemoCRUD.Shared
 {
-    internal class Movement
+    public class Movement
     {
         public int Id { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;

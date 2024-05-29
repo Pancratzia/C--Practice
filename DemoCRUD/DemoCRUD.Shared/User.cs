@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DemoCRUD.Shared
 {
-    internal class User
+    public class User
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
