@@ -74,12 +74,18 @@
         var respuesta = await Http.PostAsJsonAsync("http://localhost:5137/api/User/AddUser", usuario);
 
         Respuesta = await respuesta.Content.ReadAsStringAsync();
+
+        await Update();
     }
 
     protected override async Task OnInitializedAsync()
     {
-        var usuarios = await Http.GetFromJsonAsync<List<User>>("http://localhost:5137/api/User/GetUsers");
+        await Update();
+    }
 
+    async Task Update()
+    {
+        var usuarios = await Http.GetFromJsonAsync<List<User>>("http://localhost:5137/api/User/GetUsers");
         Listado = usuarios ?? new List<User>();
     }
 
