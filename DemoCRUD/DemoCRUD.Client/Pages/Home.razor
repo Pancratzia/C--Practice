@@ -11,17 +11,25 @@
 <br />
 
 <p class="alert alert-info">@ConexionServidor</p>
-<p class="alert alert-success">Conectando con la BD de la tabla de Usuarios</p>
-<p class="alert alert-success">Conectando con la BD de la tabla de Movimientos</p>
+<p class="alert alert-success">@ConexionUsuarios</p>
+<p class="alert alert-success">@ConexionMovimientos</p>
 
 @code{
     string ConexionServidor = "En espera...";
+    string ConexionUsuarios = "En espera...";
+    string ConexionMovimientos = "En espera...";
 
     async Task ProbarConexion()
     {
         await Task.Delay(3000);
         var respuesta = await Http.GetStringAsync("http://localhost:5137/api/User/Test");
         ConexionServidor = respuesta;
+
+        var respuestaU = await Http.GetStringAsync("http://localhost:5137/api/User/TestUsers");
+        ConexionUsuarios = respuestaU;
+
+        var respuestaM = await Http.GetStringAsync("http://localhost:5137/api/Movement/TestMovements");
+        ConexionMovimientos = respuestaM;
     }
 
     protected override async Task OnInitializedAsync()
