@@ -35,7 +35,7 @@
                     <td>@movement.Tipo</td>
                     <td>@movement.Usuario?.Nombre</td>
                     <td class="text-center">
-                        <button type="button" class="btn btn-warning m-1">Editar</button>
+                        <button type="button" class="btn btn-warning m-1" @onclick="(() => Asign(movement))" >Editar</button>
                         <button type="button" class="btn btn-danger" @onclick="(() => DeleteMovement(movement.Id))">Eliminar</button>
                     </td>
                 </tr>
@@ -80,12 +80,56 @@
     <p class="alert alert-info mt-2" role="alert">@Respuesta</p>
 }
 
+<!--Modificar Movimiento-->
+
+<br />
+
+
+    <h3 class="mt-5">Editar Movimiento</h3>
+
+    <EditForm Model="@movimientoEdicion">
+        <InputSelect class="form-control" @bind-Value="@movimientoEdicion.UsuarioId">
+            <option value="0">-- Seleccione --</option>
+            @foreach (var user in ListadoUsuarios)
+            {
+                <option value="@user.Id">@user.Nombre</option>
+            }
+        </InputSelect>
+
+    </EditForm>
+
+    <br />
+    <label class="form-label">Cantidad: </label>
+    <input class="form-control" type="number" placeholder="Escriba la cantidad" @bind-value="movimientoEdicion.Cantidad" />
+    <br />
+    <label class="form-label">Tipo: </label>
+    <select class="form-control" @bind="@movimientoEdicion.Tipo">
+        <option value="ingreso">Ingreso</option>
+        <option value="egreso">Egreso</option>
+    </select>
+    <br />
+    <label class="form-label">Descripción: </label>
+    <input class="form-control" type="text" placeholder="Escriba la descripción" @bind-value="movimientoEdicion.Descripcion" />
+
+    <br />
+    <button @onclick="UpdateMovement" type="button" class="btn btn-primary">Guardar</button>
+
+    @if (!string.IsNullOrEmpty(RespuestaEdicion))
+    {
+        <p class="alert alert-info mt-2" role="alert">@RespuestaEdicion</p>
+    }
+
+
+
+
 @code {
     string Respuesta = "";
+    string RespuestaEdicion = "";
     public static List<Movement> Listado = new List<Movement>();
     public static List<User> ListadoUsuarios = new List<User>();
     User miUsuario = new User();
     Movement movimiento = new Movement();
+    Movement movimientoEdicion = new Movement();
 
     protected override async Task OnInitializedAsync()
     {
@@ -116,6 +160,18 @@
     {
         var respuesta = await Http.DeleteAsync($"http://localhost:5137/api/Movement/{id}");
         Respuesta = await respuesta.Content.ReadAsStringAsync();
+        await UpdateMovements();
+    }
+
+    async Task Asign(Movement movement)
+    {
+        movimientoEdicion = movement;
+    }
+
+    async Task UpdateMovement()
+    {
+        var respuesta = await Http.PutAsJsonAsync($"http://localhost:5137/api/Movement/{movimientoEdicion.Id}", movimientoEdicion);
+        RespuestaEdicion = await respuesta.Content.ReadAsStringAsync();
         await UpdateMovements();
     }
 }
