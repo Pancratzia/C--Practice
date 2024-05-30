@@ -21,18 +21,28 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>2021-01-01</td>
-            <td>Descripción</td>
-            <td>2</td>
-            <td>Tipo</td>
-            <td>Nombre</td>
-            <td class="text-center">
-                <button type="button" class="btn btn-warning m-1">Editar</button>
-                <button type="button" class="btn btn-danger">Eliminar</button>
-            </td>
-        </tr>
+        
+
+            @if (Listado.Count > 0)
+            {
+                @foreach (var movement in Listado)
+                {
+                <tr>
+                    <th scope="row">@movement.Id</th>
+                    <td>@movement.Fecha.ToString("dd/MM/yyyy")</td>
+                    <td>@movement.Descripcion</td>
+                    <td>@movement.Cantidad</td>
+                    <td>@movement.Tipo</td>
+                    <td>@movement.Usuario?.Nombre</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-warning m-1">Editar</button>
+                        <button type="button" class="btn btn-danger" @onclick="(() => DeleteMovement(movement.Id))">Eliminar</button>
+                    </td>
+                </tr>
+                }
+            }
+
+        
     </tbody>
 </table>
 
@@ -98,5 +108,14 @@
 
     async Task UpdateMovements()
     {
+        var movements = await Http.GetFromJsonAsync<List<Movement>>("http://localhost:5137/api/Movement/GetMovements");
+        Listado = movements ?? new List<Movement>();
+    }
+
+    async Task DeleteMovement(int id)
+    {
+        var respuesta = await Http.DeleteAsync($"http://localhost:5137/api/Movement/{id}");
+        Respuesta = await respuesta.Content.ReadAsStringAsync();
+        await UpdateMovements();
     }
 }

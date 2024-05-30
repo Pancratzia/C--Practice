@@ -45,6 +45,59 @@ namespace DemoCRUD.Controllers
                 return "Ha habido un error en la aplicación";
             }
         }
+
+        [HttpGet("GetMovements")]
+        public async Task<ActionResult<List<Movement>>> GetMovements()
+        {
+            var movements = await _context.Movimientos.Include(u=> u.Usuario).ToListAsync();
+            return movements;
+        }
+
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<ActionResult<string>> DeleteMovement(int id)
+        {
+            try
+            {
+                var movement = await _context.Movimientos.FindAsync(id);
+                if (movement == null)
+                {
+                    return "No existe el movimiento";
+                }
+                _context.Movimientos.Remove(movement);
+                await _context.SaveChangesAsync();
+                return "Movimiento eliminado";
+            }
+            catch (Exception ex)
+            {
+                return "Ha habido un error en la aplicación";
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<string>> UpdateMovement(Movement movement)
+        {
+            try
+            {
+                var DbObject = await _context.Movimientos.FindAsync(movement.Id);
+                if (DbObject == null)
+                {
+                    return "No existe el movimiento";
+                }
+                DbObject.Fecha = movement.Fecha;
+                DbObject.Cantidad = movement.Cantidad;
+                DbObject.Tipo = movement.Tipo;
+                DbObject.Descripcion = movement.Descripcion;
+                DbObject.UsuarioId = movement.UsuarioId;
+                await _context.SaveChangesAsync();
+                return "Movimiento actualizado";
+            }
+            catch (Exception ex)
+            {
+                return "Ha habido un error en la aplicación";
+            }
+        }
     }
 
 
